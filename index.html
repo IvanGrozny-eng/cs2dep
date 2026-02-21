@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS2DEP</title>
+    <title>CS2DEP // EXPERIMENTAL TACTICAL DATABASE</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Plus+Jakarta+Sans:wght@200;400;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --bg: #050505;
-            --accent: #ff8c00; 
-            --accent-dim: #cc5500;
+            --accent: #ffb300; /* Новый технологичный янтарный */
+            --accent-dim: #c66900;
             --surface: #0a0a0a;
             --text: #ffffff;
             --text-dim: #444444;
             --border: #1a1510;
-            --glow: 0 0 30px rgba(255, 140, 0, 0.35);
+            --glow: 0 0 30px rgba(255, 179, 0, 0.3);
             --side-width: 100px;
         }
 
@@ -43,7 +43,7 @@
             border-left: 2px solid var(--accent);
             padding: 15px 25px;
             margin-bottom: 40px;
-            background: rgba(255, 140, 0, 0.03);
+            background: rgba(255, 179, 0, 0.03);
             position: relative;
             z-index: 700;
         }
@@ -140,7 +140,7 @@
         .hero h1 {
             font-family: 'Inter', sans-serif; font-size: clamp(2.5rem, 10vw, 7rem);
             font-weight: 900; line-height: 0.9; text-transform: uppercase; margin-bottom: 40px;
-            letter-spacing: -4px; background: linear-gradient(180deg, #fff 40%, #333 100%);
+            letter-spacing: -4px; background: linear-gradient(180deg, #fff 40%, #555 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
@@ -152,7 +152,7 @@
         /* СЕТКА */
         .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
         .card { background: var(--surface); border: 1px solid var(--border); padding: 40px; transition: 0.4s ease; }
-        .card:hover { border-color: var(--accent); box-shadow: 0 0 40px rgba(255, 140, 0, 0.05); }
+        .card:hover { border-color: var(--accent); box-shadow: 0 0 40px rgba(255, 179, 0, 0.05); }
         .card-label { font-size: 0.7rem; text-transform: uppercase; color: var(--accent); letter-spacing: 3px; font-weight: 900; margin-bottom: 20px; display: block; }
         
         .col-12 { grid-column: span 12; } .col-6 { grid-column: span 6; } .col-4 { grid-column: span 4; }
@@ -176,7 +176,7 @@
             font-weight: 900; text-transform: uppercase; letter-spacing: 4px;
             cursor: pointer; color: #444; transition: 0.3s; font-size: 1.2rem;
         }
-        .map-item:hover { border-color: var(--accent); color: var(--accent); background: rgba(255, 140, 0, 0.02); }
+        .map-item:hover { border-color: var(--accent); color: var(--accent); background: rgba(255, 179, 0, 0.02); }
 
         .action-btn {
             margin-top: 30px; padding: 15px 40px; background: transparent;
@@ -314,7 +314,7 @@
                     <table>
                         <tr><th>Событие</th><th>Сумма</th></tr>
                         <tr><td>Победа (устранение / взрыв / дефьюз)</td><td class="accent-td">$3250 — $3500</td></tr>
-                        <tr><td>Установка C4 (даже при проигрыше)</td><td class="accent-td">$800</td></tr>
+                        <tr><td>Установка C4 (бонус команде)</td><td class="accent-td">$800</td></tr>
                         <tr><td>Победа по времени (для СТ)</td><td class="accent-td">$3250</td></tr>
                     </table>
                 </div>
@@ -344,7 +344,7 @@
                 <div class="table-wrapper">
                     <table>
                         <tr><td>Длительность дыма (Smoke)</td><td class="accent-td">18.00с</td></tr>
-                        <tr><td>Горение Молотова/Incendiary</td><td class="accent-td">7.03с</td></tr>
+                        <tr><td>Горение Молотова</td><td class="accent-td">7.03с</td></tr>
                         <tr><td>Ослепление (Flash) max</td><td class="accent-td">4.50с</td></tr>
                     </table>
                 </div>
@@ -384,13 +384,13 @@
         <div class="card col-12 legal-content">
             <p>Последнее обновление: 21 февраля 2026 г.</p>
             <h2>1. Введение</h2>
-            <p>Данный веб-ресурс (далее "CS2DEP") является независимым агрегатором статистических и технических данных игры Counter-Strike 2. Сайт создан для ознакомительных и тактических целей сообщества.</p>
-            <h2>2. Авторские права и Valve Corporation</h2>
-            <p>Все права на игру Counter-Strike 2, включая названия, логотипы, изображения карт и игровые механики, принадлежат корпорации <b>Valve Corporation</b>. CS2DEP не является официальным партнером Valve и не претендует на владение их интеллектуальной собственностью.</p>
+            <p>Данный веб-ресурс (далее "CS2DEP") является независимым агрегатором статистических и технических данных игры Counter-Strike 2.</p>
+            <h2>2. Авторские права</h2>
+            <p>Все права на игру Counter-Strike 2 принадлежат корпорации <b>Valve Corporation</b>. CS2DEP не является официальным партнером Valve.</p>
             <h2>3. Отказ от гарантий</h2>
-            <p>Разработчик проекта (Ivan Grozny) прилагает все усилия для актуализации данных, однако не гарантирует 100% точность информации в случае внесения скрытых изменений в игру через обновления (патчи) от Valve Corporation.</p>
+            <p>Разработчик проекта (Ivan Grozny) не гарантирует 100% точность информации в случае внесения изменений в игру через обновления от Valve.</p>
             <h2>4. Использование данных</h2>
-            <p>Информация с данного сайта может быть использована игроками для улучшения своих навыков. Копирование структуры кода сайта без указания авторства не приветствуется.</p>
+            <p>Информация предоставлена для улучшения навыков сообщества. Копирование структуры кода без указания авторства запрещено.</p>
         </div>
     </div>
 </div>
@@ -402,14 +402,12 @@
             <p style="margin-top: 25px; line-height: 1.8;">
                 © 2026 CS2DEP PROJECT. Все права защищены. <br>
                 Counter-Strike 2 и логотип CS2 являются зарегистрированными товарными знаками Valve Corporation. <br>
-                Данный ресурс не аффилирован, не поддерживается и не спонсируется Valve Corporation. <br>
-                Все игровые данные получены из открытых источников и в ходе независимых тестов.
+                Данный ресурс не аффилирован, не поддерживается и не спонсируется Valve Corporation.
             </p>
             <p style="margin-top: 25px; color: var(--accent); font-weight: 700; letter-spacing: 1px;">DEVELOPED BY: <b>Ivan Grozny</b></p>
             <div class="footer-links">
                 <a onclick="showView('terms')">Условия использования</a>
                 <a href="https://www.valvesoftware.com/en/legal/terms-of-use" target="_blank">Valve Software Legal</a>
-                <a href="#">Privacy Policy</a>
             </div>
         </div>
     </div>
@@ -418,14 +416,14 @@
 <script>
     const mapList = ["Mirage", "Dust II", "Inferno", "Nuke", "Overpass", "Ancient", "Anubis", "Vertigo"];
     const utilDB = {
-        "Mirage": { utils: [["T-Spawn", "A-Stairs", "Smoke"], ["T-Spawn", "Jungle", "Smoke"], ["T-Spawn", "CT-Ticket", "Smoke"], ["Top Mid", "Window", "Smoke"]] },
-        "Dust II": { utils: [["T-Spawn", "Xbox", "Smoke"], ["Doors", "Corner", "Smoke"], ["A-Long", "CT-Cross", "Smoke"]] },
-        "Inferno": { utils: [["Banana", "CT-Start", "Smoke"], ["Banana", "Coffins", "Smoke"], ["Alt-Mid", "Long-Corner", "Smoke"]] },
-        "Nuke": { utils: [["T-Red", "Cross 1", "Smoke"], ["T-Red", "Cross 2", "Smoke"], ["Lobby", "Mini-Roof", "Moly"]] },
-        "Overpass": { utils: [["T-Spawn", "A-Long", "Smoke"], ["Tracks", "B-Heaven", "Smoke"], ["Tracks", "B-Bridge", "Smoke"]] },
-        "Ancient": { utils: [["T-Spawn", "Red-Room", "Smoke"], ["T-Spawn", "A-Temple", "Smoke"], ["B-Ramp", "B-Long", "Smoke"]] },
-        "Anubis": { utils: [["T-Spawn", "A-Camera", "Smoke"], ["Mid", "B-Connector", "Smoke"], ["Alley", "B-Site Back", "Smoke"]] },
-        "Vertigo": { utils: [["T-Spawn", "A-Ramp Corner", "Smoke"], ["Mid", "B-Connector", "Smoke"], ["A-Ramp", "Backsite", "Moly"]] }
+        "Mirage": { utils: [["T-Spawn", "A-Stairs", "Smoke"], ["T-Spawn", "Jungle", "Smoke"], ["T-Spawn", "Ticket", "Smoke"], ["Top Mid", "Window", "Smoke"]] },
+        "Dust II": { utils: [["T-Spawn", "Xbox", "Smoke"], ["Doors", "Corner", "Smoke"], ["A-Long", "Cross", "Smoke"]] },
+        "Inferno": { utils: [["Banana", "CT-Start", "Smoke"], ["Banana", "Coffins", "Smoke"], ["Alt-Mid", "Long", "Smoke"]] },
+        "Nuke": { utils: [["T-Red", "Cross 1", "Smoke"], ["T-Red", "Cross 2", "Smoke"]] },
+        "Overpass": { utils: [["T-Spawn", "A-Long", "Smoke"], ["Tracks", "B-Heaven", "Smoke"]] },
+        "Ancient": { utils: [["T-Spawn", "Red-Room", "Smoke"], ["T-Spawn", "A-Temple", "Smoke"]] },
+        "Anubis": { utils: [["T-Spawn", "A-Camera", "Smoke"], ["Mid", "B-Connector", "Smoke"]] },
+        "Vertigo": { utils: [["T-Spawn", "A-Ramp Corner", "Smoke"], ["Mid", "B-Connector", "Smoke"]] }
     };
 
     function createRulers() {
@@ -467,22 +465,7 @@
         renderMaps();
     };
 </script>
-  <!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=106948883', 'ym');
-
-    ym(106948883, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/106948883" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
 
 </body>
 </html>
-</html>
-
 
