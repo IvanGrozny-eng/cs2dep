@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS2DEP</title>
+    <title>CS2DEP // EXPERIMENTAL TACTICAL DATABASE</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Plus+Jakarta+Sans:wght@200;400;700&display=swap" rel="stylesheet">
     
     <style>
@@ -16,7 +16,7 @@
             --text-dim: #444444;
             --border: #1a1510;
             --glow: 0 0 30px rgba(255, 140, 0, 0.35);
-            --side-width: 100px;
+            --side-width: 120px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -60,10 +60,12 @@
             font-size: 0.75rem;
             color: #666;
             margin-top: 5px;
-            line-height: 1.4;
+            text-transform: none;
+            letter-spacing: 0;
+            font-weight: 400;
         }
 
-        /* --- БОКОВЫЕ ШКАЛЫ (АДАПТИВНЫЕ) --- */
+        /* --- БОКОВЫЕ ШКАЛЫ (RULERS) --- */
         .ruler {
             position: fixed;
             top: 0;
@@ -75,15 +77,10 @@
             justify-content: space-between;
             padding: 120px 20px;
             pointer-events: none;
-            opacity: 0.3;
+            opacity: 0.4;
         }
         .ruler-left { left: 0; border-right: 1px solid #111; align-items: flex-end; }
         .ruler-right { right: 0; border-left: 1px solid #111; align-items: flex-start; }
-
-        @media (max-width: 1024px) {
-            .ruler { display: none; }
-            :root { --side-width: 20px; }
-        }
 
         .scale-mark {
             width: 30px;
@@ -101,108 +98,91 @@
         }
         .ruler-left .scale-mark::after { right: 40px; }
         .ruler-right .scale-mark::after { left: 40px; }
+
         .scale-mark.long { width: 60px; background: var(--accent); }
         .scale-mark.long::after { color: var(--accent); }
 
         /* --- ШАПКА --- */
         header {
-            position: fixed; top: 5px; left: 0; width: 100%; padding: 25px 50px;
+            position: fixed; top: 5px; left: 0; width: 100%; padding: 35px 70px;
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(20px);
+            background: rgba(5, 5, 5, 0.98); backdrop-filter: blur(25px);
             z-index: 1500; border-bottom: 1px solid var(--border);
         }
-        .logo { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.8rem; letter-spacing: -1.5px; cursor: pointer; }
+        .logo { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 2rem; letter-spacing: -1.5px; cursor: pointer; }
         .logo span { color: var(--accent); text-shadow: var(--glow); }
-        
-        .nav-links { display: flex; gap: 30px; }
+        .nav-links { display: flex; gap: 50px; }
         .nav-links a {
             color: var(--text-dim); text-decoration: none; text-transform: uppercase;
-            font-size: 0.75rem; font-weight: 800; letter-spacing: 2px; transition: 0.3s;
+            font-size: 0.8rem; font-weight: 800; letter-spacing: 3px; transition: 0.3s;
         }
         .nav-links a:hover { color: var(--accent); }
 
-        @media (max-width: 768px) {
-            header { padding: 20px; flex-direction: column; gap: 15px; }
-            .nav-links { gap: 15px; flex-wrap: wrap; justify-content: center; }
-        }
-
         /* --- КОНТЕНТ --- */
         .container {
-            max-width: 1400px; margin: 0 auto;
-            padding: 180px var(--side-width) 100px;
+            max-width: 1600px; margin: 0 auto;
+            padding: 240px calc(var(--side-width) + 50px) 120px;
             position: relative; z-index: 600;
         }
 
-        @media (max-width: 1024px) {
-            .container { padding: 160px 25px 80px; }
-        }
-
         .hero h1 {
-            font-family: 'Inter', sans-serif; font-size: clamp(2.5rem, 10vw, 7rem);
-            font-weight: 900; line-height: 0.9; text-transform: uppercase; margin-bottom: 40px;
-            letter-spacing: -4px; background: linear-gradient(180deg, #fff 40%, #333 100%);
+            font-family: 'Inter', sans-serif; font-size: clamp(3.5rem, 12vw, 8.5rem);
+            font-weight: 900; line-height: 0.8; text-transform: uppercase; margin-bottom: 50px;
+            letter-spacing: -6px; background: linear-gradient(180deg, #fff 40%, #333 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
         .hero p {
-            font-size: clamp(1.1rem, 3vw, 1.5rem); color: #888; max-width: 900px; line-height: 1.5;
-            border-left: 4px solid var(--accent); padding-left: 25px; margin-bottom: 80px;
+            font-size: 1.6rem; color: #999; max-width: 1000px; line-height: 1.4;
+            border-left: 6px solid var(--accent); padding-left: 40px; margin-bottom: 100px;
         }
 
-        /* СЕТКА КАРТОЧЕК */
-        .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
-        .card { background: var(--surface); border: 1px solid var(--border); padding: 40px; transition: 0.4s ease; }
-        .card:hover { border-color: var(--accent); box-shadow: 0 0 40px rgba(255, 140, 0, 0.05); }
-        .card-label { font-size: 0.7rem; text-transform: uppercase; color: var(--accent); letter-spacing: 3px; font-weight: 900; margin-bottom: 20px; display: block; }
-        
-        .col-12 { grid-column: span 12; } .col-6 { grid-column: span 6; } .col-4 { grid-column: span 4; }
+        .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 30px; }
+        .card { background: var(--surface); border: 1px solid var(--border); padding: 60px; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .card:hover { border-color: var(--accent); box-shadow: 0 0 50px rgba(255, 140, 0, 0.1); }
+        .card-label { font-size: 0.75rem; text-transform: uppercase; color: var(--accent); letter-spacing: 5px; font-weight: 900; margin-bottom: 25px; display: block; }
 
-        @media (max-width: 900px) {
-            .col-4, .col-6 { grid-column: span 12; }
-            .card { padding: 30px; }
-        }
+        .col-12 { grid-column: span 12; } .col-6 { grid-column: span 6; }
+        .col-4 { grid-column: span 4; }
 
-        /* ТАБЛИЦЫ */
-        .table-wrapper { overflow-x: auto; margin-top: 20px; }
-        table { width: 100%; border-collapse: collapse; min-width: 500px; }
-        th { text-align: left; font-size: 0.75rem; color: #555; text-transform: uppercase; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
-        td { padding: 20px 0; font-size: 1rem; border-bottom: 1px solid var(--border); color: #ccc; }
+        table { width: 100%; border-collapse: collapse; margin-top: 25px; }
+        th { text-align: left; font-size: 0.8rem; color: #555; text-transform: uppercase; padding-bottom: 20px; border-bottom: 2px solid var(--border); }
+        td { padding: 25px 0; font-size: 1.1rem; border-bottom: 1px solid var(--border); color: #eee; }
         .accent-td { color: var(--accent); font-weight: 800; }
 
-        /* МАППУЛ */
-        .maps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; margin-top: 30px; }
+        /* КАРТЫ */
+        .maps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; margin-top: 40px; }
         .map-item {
-            height: 140px; background: #080808; border: 1px solid var(--border);
+            height: 180px; background: #000; border: 1px solid var(--border);
             display: flex; align-items: center; justify-content: center;
-            font-weight: 900; text-transform: uppercase; letter-spacing: 4px;
-            cursor: pointer; color: #444; transition: 0.3s; font-size: 1.2rem;
+            font-weight: 900; text-transform: uppercase; letter-spacing: 6px;
+            cursor: pointer; color: #333; transition: 0.5s; font-size: 1.4rem;
         }
-        .map-item:hover { border-color: var(--accent); color: var(--accent); background: rgba(255, 140, 0, 0.02); }
+        .map-item:hover { border-color: var(--accent); color: var(--accent); background: rgba(255, 140, 0, 0.05); }
 
         .action-btn {
-            margin-top: 30px; padding: 15px 40px; background: transparent;
+            margin-top: 40px; padding: 20px 55px; background: transparent;
             border: 2px solid var(--accent-dim); color: var(--accent);
-            text-transform: uppercase; font-size: 0.8rem; font-weight: 900; cursor: pointer; letter-spacing: 2px;
+            text-transform: uppercase; font-size: 0.9rem; font-weight: 900; cursor: pointer; letter-spacing: 3px;
         }
         .action-btn:hover { background: var(--accent); color: #000; box-shadow: var(--glow); }
 
         /* ВИДЫ (VIEWS) */
-        .view { display: none; animation: fadeIn 0.5s ease-out forwards; }
+        .view { display: none; animation: fadeIn 0.6s ease-out forwards; }
         .view.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ПОДВАЛ */
-        footer { margin-top: 150px; padding: 80px 50px; background: #010101; border-top: 1px solid var(--border); }
-        .footer-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
-        .footer-info { max-width: 600px; color: #444; font-size: 0.85rem; line-height: 1.6; }
-        .footer-links { margin-top: 20px; display: flex; gap: 20px; }
-        .footer-links a { color: #666; text-decoration: none; font-weight: 700; transition: 0.3s; cursor: pointer; font-size: 0.75rem; }
-        .footer-links a:hover { color: var(--accent); }
+        /* ТЕКСТ СОГЛАШЕНИЯ */
+        .legal-content { line-height: 1.8; color: #aaa; }
+        .legal-content h2 { color: #fff; margin: 40px 0 20px; text-transform: uppercase; font-size: 1.2rem; }
 
-        @media (max-width: 768px) {
-            footer { padding: 60px 20px; }
-            .footer-content { flex-direction: column; text-align: center; align-items: center; }
-        }
+        /* --- ПОДВАЛ --- */
+        footer { margin-top: 180px; padding: 100px 80px; background: #010101; border-top: 1px solid var(--border); }
+        .footer-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: flex-start; }
+        .footer-info { max-width: 800px; color: #444; font-size: 0.9rem; }
+        .footer-links { margin-top: 20px; display: flex; gap: 30px; }
+        .footer-links a { color: #666; text-decoration: none; border-bottom: 1px solid transparent; transition: 0.3s; cursor: pointer; }
+        .footer-links a:hover { color: var(--accent); border-bottom-color: var(--accent); }
     </style>
 </head>
 <body>
@@ -235,7 +215,7 @@
             <p>
                 Профессиональный агрегатор тактических данных для Counter-Strike 2. 
                 Системный подход к анализу игровых механик, расчету экономики и 
-                оптимизации временных маршрутов.
+                оптимизации временных маршрутов. Мы собрали все переменные в одну систему.
             </p>
         </section>
 
@@ -243,145 +223,133 @@
             <div class="card col-4">
                 <span class="card-label">Economic Module</span>
                 <h2>Баланс сил</h2>
-                <p style="color: #666; font-size: 0.85rem; margin-top: 10px;">Анализ потерь, бонусов и стоимости закупа для менеджмента ресурсов команды.</p>
-                <button class="action-btn" onclick="showView('eco')">Справочник</button>
+                <p style="color: #666; font-size: 0.9rem; margin-top: 10px;">Анализ потерь, бонусов и стоимости закупа для оптимального менеджмента ресурсов команды.</p>
+                <button class="action-btn" onclick="showView('eco')">Открыть данные</button>
             </div>
 
             <div class="card col-4">
                 <span class="card-label">Timing Module</span>
-                <h2>Физика времени</h2>
-                <p style="color: #666; font-size: 0.85rem; margin-top: 10px;">Замеры скорости передвижения, времени действия гранат и циклов C4.</p>
-                <button class="action-btn" onclick="showView('time')">Замеры</button>
+                <h2>Тайм-менеджмент</h2>
+                <p style="color: #666; font-size: 0.9rem; margin-top: 10px;">Точные замеры скорости передвижения, времени действия гранат и циклов бомбы.</p>
+                <button class="action-btn" onclick="showView('time')">Открыть замеры</button>
             </div>
 
             <div class="card col-4">
                 <span class="card-label">Tactical Module</span>
                 <h2>Картография</h2>
-                <p style="color: #666; font-size: 0.85rem; margin-top: 10px;">Интерактивная база данных раскидок для соревновательного маппула.</p>
+                <p style="color: #666; font-size: 0.9rem; margin-top: 10px;">Интерактивная база данных раскидок и ключевых позиций на картах соревновательного пула.</p>
                 <button class="action-btn" onclick="showView('home')">В разработке</button>
             </div>
 
             <div class="card col-12">
                 <span class="card-label">Tactical Sectors</span>
-                <h2>Актуальный маппул (Active Duty)</h2>
+                <h2>Актуальный соревновательный маппул (Active Duty)</h2>
                 <div class="maps-grid" id="mapsGrid"></div>
             </div>
         </div>
     </div>
 
     <div id="eco" class="view">
-        <button class="action-btn" onclick="showView('home')" style="margin-bottom: 40px;">← Назад</button>
-        <span class="card-label">Economic Protocols</span>
-        <h1 style="font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 30px;">Экономическая модель CS2</h1>
+        <button class="action-btn" onclick="showView('home')" style="margin-bottom: 60px;">← Вернуться на главную</button>
+        <span class="card-label">Global Economic Protocols</span>
+        <h1 style="font-size: 4rem; margin-bottom: 20px;">Экономическая модель CS2</h1>
         
         <div class="grid">
             <div class="card col-12">
-                <h3>Бонусы за поражение (Loss Bonus)</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <tr><th>Серия поражений</th><th>Награда</th><th>Статус</th></tr>
-                        <tr><td>0 раундов</td><td class="accent-td">$1400</td><td>Старт / Сброс</td></tr>
-                        <tr><td>1 раунд</td><td class="accent-td">$1900</td><td>Накопление</td></tr>
-                        <tr><td>2 раунда</td><td class="accent-td">$2400</td><td>Слабый бай</td></tr>
-                        <tr><td>3 раунда</td><td class="accent-td">$2900</td><td>Полный бай</td></tr>
-                        <tr><td>4+ раунда</td><td class="accent-td">$3400</td><td>Максимум</td></tr>
-                    </table>
-                </div>
+                <h3>Последовательность бонусов за поражение (Loss Bonus)</h3>
+                <table>
+                    <tr><th>Поражений подряд</th><th>Награда команде</th><th>Описание ситуации</th></tr>
+                    <tr><td>0 (Первое поражение)</td><td class="accent-td">$1400</td><td>Сброс серии или старт матча</td></tr>
+                    <tr><td>1 Раунд</td><td class="accent-td">$1900</td><td>Начало накопления</td></tr>
+                    <tr><td>2 Раунда</td><td class="accent-td">$2400</td><td>Возможность слабого закупа</td></tr>
+                    <tr><td>3 Раунда</td><td class="accent-td">$2900</td><td>Полноценный бай в следующем</td></tr>
+                    <tr><td>4+ Раунда</td><td class="accent-td">$3400</td><td>Максимальный бонус</td></tr>
+                </table>
             </div>
 
             <div class="card col-6">
-                <h3>Награды за Kill</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <tr><td>Нож</td><td class="accent-td">$1500</td></tr>
-                        <tr><td>Дробовики</td><td class="accent-td">$900</td></tr>
-                        <tr><td>ПП (SMGs)</td><td class="accent-td">$600</td></tr>
-                        <tr><td>Винтовки</td><td class="accent-td">$300</td></tr>
-                        <tr><td>AWP</td><td class="accent-td">$100</td></tr>
-                    </table>
-                </div>
+                <h3>Награды за устранение (Kill Rewards)</h3>
+                <table>
+                    <tr><th>Тип оружия</th><th>Сумма</th></tr>
+                    <tr><td>Нож (Knife)</td><td class="accent-td">$1500</td></tr>
+                    <tr><td>Дробовики (Shotguns)</td><td class="accent-td">$900</td></tr>
+                    <tr><td>ПП (SMGs) *кроме P90</td><td class="accent-td">$600</td></tr>
+                    <tr><td>P90 / Пистолеты / Винтовки</td><td class="accent-td">$300</td></tr>
+                    <tr><td>AWP</td><td class="accent-td">$100</td></tr>
+                </table>
             </div>
 
             <div class="card col-6">
-                <h3>Цели раунда</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <tr><td>Победа (Любая)</td><td class="accent-td">$3250 - $3500</td></tr>
-                        <tr><td>Установка C4 (Т)</td><td class="accent-td">$800</td></tr>
-                        <tr><td>Победа по времени (СТ)</td><td class="accent-td">$3250</td></tr>
-                    </table>
-                </div>
+                <h3>Объекты и цели</h3>
+                <table>
+                    <tr><th>Событие</th><th>Сумма</th></tr>
+                    <tr><td>Победа (устранение / взрыв / дефьюз)</td><td class="accent-td">$3250 — $3500</td></tr>
+                    <tr><td>Установка C4 (бонус команде)</td><td class="accent-td">$800</td></tr>
+                    <tr><td>Победа по времени (СТ)</td><td class="accent-td">$3250</td></tr>
+                </table>
             </div>
         </div>
     </div>
 
     <div id="time" class="view">
-        <button class="action-btn" onclick="showView('home')" style="margin-bottom: 40px;">← Назад</button>
-        <span class="card-label">Temporal Metrics</span>
-        <h1 style="font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 30px;">Тайминги и физика</h1>
+        <button class="action-btn" onclick="showView('home')" style="margin-bottom: 60px;">← Вернуться на главную</button>
+        <span class="card-label">In-Game Temporal Metrics</span>
+        <h1 style="font-size: 4rem; margin-bottom: 20px;">Тайминги и физика времени</h1>
 
         <div class="grid">
             <div class="card col-6">
-                <h3>Бомба (C4)</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <tr><td>Таймер взрыва</td><td class="accent-td">40.00с</td></tr>
-                        <tr><td>Дефьюз (с китами)</td><td class="accent-td">5.00с</td></tr>
-                        <tr><td>Дефьюз (без китов)</td><td class="accent-td">10.00с</td></tr>
-                    </table>
-                </div>
+                <h3>Механика C4</h3>
+                <table>
+                    <tr><td>Время до взрыва</td><td class="accent-td">40.00с</td></tr>
+                    <tr><td>Разминирование с набором (Kit)</td><td class="accent-td">5.00с</td></tr>
+                    <tr><td>Разминирование без набора</td><td class="accent-td">10.00с</td></tr>
+                </table>
             </div>
 
             <div class="card col-6">
-                <h3>Гранаты (Utility)</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <tr><td>Длительность Smoke</td><td class="accent-td">18.00с</td></tr>
-                        <tr><td>Длительность Molotov</td><td class="accent-td">7.03с</td></tr>
-                        <tr><td>Ослепление Flash</td><td class="accent-td">4.50с</td></tr>
-                    </table>
-                </div>
+                <h3>Эффекты гранат</h3>
+                <table>
+                    <tr><td>Длительность дыма (Smoke)</td><td class="accent-td">18.00с</td></tr>
+                    <tr><td>Горение Молотова</td><td class="accent-td">7.03с</td></tr>
+                    <tr><td>Ослепление (Flash) max</td><td class="accent-td">4.50с</td></tr>
+                </table>
             </div>
 
             <div class="card col-12">
-                <h3>Скорость бега (U/S)</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <tr><th>Оружие</th><th>Скорость</th><th>Штраф</th></tr>
-                        <tr><td>Нож</td><td class="accent-td">250</td><td>0%</td></tr>
-                        <tr><td>AK-47 / M4</td><td class="accent-td">215</td><td>14%</td></tr>
-                        <tr><td>AWP</td><td class="accent-td">200</td><td>20%</td></tr>
-                    </table>
-                </div>
+                <h3>Скорость передвижения (Units/sec)</h3>
+                <table>
+                    <tr><th>Оружие</th><th>Скорость</th><th>Штраф</th></tr>
+                    <tr><td>Нож / Гранаты</td><td class="accent-td">250</td><td>0%</td></tr>
+                    <tr><td>AK-47 / M4A1-S</td><td class="accent-td">215</td><td>14%</td></tr>
+                    <tr><td>AWP</td><td class="accent-td">200</td><td>20%</td></tr>
+                </table>
             </div>
         </div>
     </div>
 
     <div id="mapDetailView" class="view">
-        <button class="action-btn" onclick="showView('home')" style="margin-bottom: 40px;">← К списку карт</button>
-        <h1 id="m-title" style="font-size: clamp(3rem, 10vw, 6rem); text-transform: uppercase;">MAP</h1>
-        <div class="grid" style="margin-top: 30px;">
+        <button class="action-btn" onclick="showView('home')" style="margin-bottom: 60px;">← Назад к списку карт</button>
+        <h1 id="m-title" style="font-size: 6rem; text-transform: uppercase;">MAP_NAME</h1>
+        <div class="grid" style="margin-top: 40px;">
             <div class="card col-12">
-                <span class="card-label">Utility Sets</span>
-                <div class="table-wrapper">
-                    <table id="utilTable"></table>
-                </div>
+                <span class="card-label">Utility Deployment</span>
+                <table id="utilTable"></table>
             </div>
         </div>
     </div>
 
     <div id="terms" class="view">
-        <button class="action-btn" onclick="showView('home')" style="margin-bottom: 40px;">← Назад</button>
-        <span class="card-label">Legal</span>
+        <button class="action-btn" onclick="showView('home')" style="margin-bottom: 60px;">← Назад</button>
+        <span class="card-label">Legal Framework</span>
         <h1>Пользовательское соглашение</h1>
         <div class="card col-12 legal-content">
-            <p>Версия: 21.02.2026</p>
-            <h2>1. Общие условия</h2>
-            <p>CS2DEP — независимый проект. Мы предоставляем данные для ознакомления.</p>
-            <h2>2. Авторские права</h2>
-            <p>Counter-Strike 2 является собственностью <b>Valve Corporation</b>. Мы не связаны с Valve официально.</p>
-            <h2>3. Ответственность</h2>
-            <p>Данные могут меняться в зависимости от патчей игры. Создатель: <b>Ivan Grozny</b>.</p>
+            <p>Последнее обновление: 21 февраля 2026 г.</p>
+            <h2>1. Общие положения</h2>
+            <p>Настоящий ресурс CS2DEP является независимым информационным проектом. Используя данный сайт, вы подтверждаете свое согласие с данными условиями.</p>
+            <h2>2. Интеллектуальная собственность</h2>
+            <p>Все права на Counter-Strike 2 принадлежат <b>Valve Corporation</b>. Все игровые данные, названия и логотипы используются в ознакомительных целях.</p>
+            <h2>3. Ограничение ответственности</h2>
+            <p>Информация предоставляется на условиях "как есть". Создатель (Ivan Grozny) не несет ответственности за изменения в механиках игры после обновлений Valve.</p>
         </div>
     </div>
 </div>
@@ -390,41 +358,42 @@
     <div class="footer-content">
         <div class="footer-info">
             <span class="logo">CS2<span>DEP</span></span>
-            <p style="margin-top: 15px;">
-                © 2026 CS2DEP. Все права на CS2 принадлежат Valve Corporation. <br>
-                Проект создан в образовательных и тактических целях.
+            <p style="margin-top: 20px; line-height: 1.6;">
+                © 2026 CS2DEP PROJECT. Все права защищены. <br>
+                Counter-Strike 2 и логотип CS2 являются зарегистрированными товарными знаками Valve Corporation. <br>
+                Данный ресурс не аффилирован с Valve Corporation.
             </p>
-            <p style="margin-top: 15px; color: var(--accent);">DEVELOPED BY: <b>Ivan Grozny</b></p>
-        </div>
-        <div class="footer-links">
-            <a onclick="showView('terms')">Условия</a>
-            <a href="https://www.valvesoftware.com/en/legal/terms-of-use" target="_blank">Valve Legal</a>
+            <p style="margin-top: 20px; color: var(--accent);">DEVELOPED BY: <b>Ivan Grozny</b></p>
+            <div class="footer-links">
+                <a onclick="showView('terms')">Условия использования</a>
+                <a href="https://www.valvesoftware.com/en/legal/terms-of-use" target="_blank">Valve Legal</a>
+            </div>
         </div>
     </div>
 </footer>
 
 <script>
+    // ПОЛНАЯ БАЗА ДАННЫХ
     const mapList = ["Mirage", "Dust II", "Inferno", "Nuke", "Overpass", "Ancient", "Anubis", "Vertigo"];
     const utilDB = {
-        "Mirage": { utils: [["T-Spawn", "A-Stairs", "Smoke"], ["T-Spawn", "Jungle", "Smoke"], ["T-Spawn", "Ticket", "Smoke"]] },
-        "Dust II": { utils: [["T-Spawn", "Xbox", "Smoke"], ["Doors", "Corner", "Smoke"], ["A-Long", "Cross", "Smoke"]] },
-        "Inferno": { utils: [["Banana", "CT-Start", "Smoke"], ["Banana", "Coffins", "Smoke"], ["Alt-Mid", "Long", "Smoke"]] },
-        "Nuke": { utils: [["T-Red", "Outside 1", "Smoke"], ["T-Red", "Outside 2", "Smoke"]] },
-        "Overpass": { utils: [["T-Spawn", "A-Long", "Smoke"], ["Tracks", "B-Heaven", "Smoke"]] },
-        "Ancient": { utils: [["T-Spawn", "Red-Room", "Smoke"], ["T-Spawn", "A-Temple", "Smoke"]] },
-        "Anubis": { utils: [["T-Spawn", "A-Camera", "Smoke"], ["Mid", "B-Conn", "Smoke"]] },
-        "Vertigo": { utils: [["T-Spawn", "A-Ramp", "Smoke"], ["Mid", "B-Conn", "Smoke"]] }
+        "Mirage": { utils: [["T-Spawn", "A-Stairs", "Smoke"], ["T-Spawn", "Jungle", "Smoke"], ["T-Spawn", "CT-Ticket", "Smoke"], ["Top Mid", "Window", "Smoke"]] },
+        "Dust II": { utils: [["T-Spawn", "Xbox", "Smoke"], ["Doors", "Corner", "Smoke"], ["A-Long", "CT-Cross", "Smoke"]] },
+        "Inferno": { utils: [["Banana", "CT-Start", "Smoke"], ["Banana", "Coffins", "Smoke"], ["Alt-Mid", "Long-Corner", "Smoke"]] },
+        "Nuke": { utils: [["T-Red", "Cross 1", "Smoke"], ["T-Red", "Cross 2", "Smoke"], ["Lobby", "Mini-Roof", "Moly"]] },
+        "Overpass": { utils: [["T-Spawn", "A-Long", "Smoke"], ["Tracks", "B-Heaven", "Smoke"], ["Tracks", "B-Bridge", "Smoke"]] },
+        "Ancient": { utils: [["T-Spawn", "Red-Room", "Smoke"], ["T-Spawn", "A-Temple", "Smoke"], ["B-Ramp", "B-Long", "Smoke"]] },
+        "Anubis": { utils: [["T-Spawn", "A-Camera", "Smoke"], ["Mid", "B-Connector", "Smoke"], ["Alley", "B-Site Back", "Smoke"]] },
+        "Vertigo": { utils: [["T-Spawn", "A-Ramp Corner", "Smoke"], ["Mid", "B-Connector", "Smoke"], ["A-Ramp", "Backsite", "Moly"]] }
     };
 
     function createRulers() {
         const left = document.getElementById('rulerLeft');
         const right = document.getElementById('rulerRight');
-        if(!left) return;
         let html = "";
-        for(let i = 0; i <= 25; i++) {
+        for(let i = 0; i <= 30; i++) {
             const isLong = i % 5 === 0;
             const val = (i * 100).toString().padStart(4, '0');
-            html += `<div class="scale-mark ${isLong ? 'long' : ''}" data-val="${isLong ? val : ''}"></div>`;
+            html += `<div class="scale-mark ${isLong ? 'long' : ''}" data-val="${isLong ? 'IDX-'+val : ''}"></div>`;
         }
         left.innerHTML = html;
         right.innerHTML = html;
