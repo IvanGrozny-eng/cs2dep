@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS2DEP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Plus+Jakarta+Sans:wght@200;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #050505;
+            --accent: #ff8c00; 
+            --accent-dim: #cc5500;
+            --surface: #0a0a0a;
+            --text: #ffffff;
+            --text-dim: #444444;
+            --border: #1a1510;
+            --glow: 0 0 30px rgba(255, 140, 0, 0.35);
+            --side-width: 100px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            letter-spacing: -0.02em;
+        }
+
+        /* НЕОНОВЫЙ АКЦЕНТ СВЕРХУ */
+        .neon-line {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, var(--accent-dim), var(--accent), var(--accent-dim));
+            z-index: 2000;
+            box-shadow: 0 0 25px var(--accent);
+        }
+
+        /* --- ДИСКЛЕЙМЕР --- */
+        .disclaimer {
+            border-left: 2px solid var(--accent);
+            padding: 15px 25px;
+            margin-bottom: 40px;
+            background: rgba(255, 140, 0, 0.03);
+            position: relative;
+            z-index: 700;
+        }
+        .disclaimer p {
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin: 0;
+        }
+        .disclaimer span {
+            display: block;
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        /* --- БОКОВЫЕ ШКАЛЫ (АДАПТИВНЫЕ) --- */
+        .ruler {
+            position: fixed;
+            top: 0;
+            height: 100vh;
+            width: var(--side-width);
+            z-index: 500;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 120px 20px;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+        .ruler-left { left: 0; border-right: 1px solid #111; align-items: flex-end; }
+        .ruler-right { right: 0; border-left: 1px solid #111; align-items: flex-start; }
+
+        @media (max-width: 1024px) {
+            .ruler { display: none; }
+            :root { --side-width: 20px; }
+        }
+
+        .scale-mark {
+            width: 30px;
+            height: 1px;
+            background: var(--text-dim);
+            position: relative;
+        }
+        .scale-mark::after {
+            content: attr(data-val);
+            position: absolute;
+            font-size: 10px;
+            top: -5px;
+            color: var(--text-dim);
+            font-family: monospace;
+        }
+        .ruler-left .scale-mark::after { right: 40px; }
+        .ruler-right .scale-mark::after { left: 40px; }
+        .scale-mark.long { width: 60px; background: var(--accent); }
+        .scale-mark.long::after { color: var(--accent); }
+
+        /* --- ШАПКА --- */
+        header {
+            position: fixed; top: 5px; left: 0; width: 100%; padding: 25px 50px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(20px);
+            z-index: 1500; border-bottom: 1px solid var(--border);
+        }
+        .logo { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.8rem; letter-spacing: -1.5px; cursor: pointer; }
+        .logo span { color: var(--accent); text-shadow: var(--glow); }
+        
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a {
+            color: var(--text-dim); text-decoration: none; text-transform: uppercase;
+            font-size: 0.75rem; font-weight: 800; letter-spacing: 2px; transition: 0.3s;
+        }
+        .nav-links a:hover { color: var(--accent); }
+
+        @media (max-width: 768px) {
+            header { padding: 20px; flex-direction: column; gap: 15px; }
+            .nav-links { gap: 15px; flex-wrap: wrap; justify-content: center; }
+        }
+
+        /* --- КОНТЕНТ --- */
+        .container {
+            max-width: 1400px; margin: 0 auto;
+            padding: 180px var(--side-width) 100px;
+            position: relative; z-index: 600;
+        }
+
+        @media (max-width: 1024px) {
+            .container { padding: 160px 25px 80px; }
+        }
+
+        .hero h1 {
+            font-family: 'Inter', sans-serif; font-size: clamp(2.5rem, 10vw, 7rem);
+            font-weight: 900; line-height: 0.9; text-transform: uppercase; margin-bottom: 40px;
+            letter-spacing: -4px; background: linear-gradient(180deg, #fff 40%, #333 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 3vw, 1.5rem); color: #888; max-width: 900px; line-height: 1.5;
+            border-left: 4px solid var(--accent); padding-left: 25px; margin-bottom: 80px;
+        }
+
+        /* СЕТКА КАРТОЧЕК */
+        .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
+        .card { background: var(--surface); border: 1px solid var(--border); padding: 40px; transition: 0.4s ease; }
+        .card:hover { border-color: var(--accent); box-shadow: 0 0 40px rgba(255, 140, 0, 0.05); }
+        .card-label { font-size: 0.7rem; text-transform: uppercase; color: var(--accent); letter-spacing: 3px; font-weight: 900; margin-bottom: 20px; display: block; }
+        
+        .col-12 { grid-column: span 12; } .col-6 { grid-column: span 6; } .col-4 { grid-column: span 4; }
+
+        @media (max-width: 900px) {
+            .col-4, .col-6 { grid-column: span 12; }
+            .card { padding: 30px; }
+        }
+
+        /* ТАБЛИЦЫ */
+        .table-wrapper { overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; min-width: 500px; }
+        th { text-align: left; font-size: 0.75rem; color: #555; text-transform: uppercase; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+        td { padding: 20px 0; font-size: 1rem; border-bottom: 1px solid var(--border); color: #ccc; }
+        .accent-td { color: var(--accent); font-weight: 800; }
+
+        /* МАППУЛ */
+        .maps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; margin-top: 30px; }
+        .map-item {
+            height: 140px; background: #080808; border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; text-transform: uppercase; letter-spacing: 4px;
+            cursor: pointer; color: #444; transition: 0.3s; font-size: 1.2rem;
+        }
+        .map-item:hover { border-color: var(--accent); color: var(--accent); background: rgba(255, 140, 0, 0.02); }
+
+        .action-btn {
+            margin-top: 30px; padding: 15px 40px; background: transparent;
+            border: 2px solid var(--accent-dim); color: var(--accent);
+            text-transform: uppercase; font-size: 0.8rem; font-weight: 900; cursor: pointer; letter-spacing: 2px;
+        }
+        .action-btn:hover { background: var(--accent); color: #000; box-shadow: var(--glow); }
+
+        /* ВИДЫ (VIEWS) */
+        .view { display: none; animation: fadeIn 0.5s ease-out forwards; }
+        .view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ПОДВАЛ */
+        footer { margin-top: 150px; padding: 80px 50px; background: #010101; border-top: 1px solid var(--border); }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
+        .footer-info { max-width: 600px; color: #444; font-size: 0.85rem; line-height: 1.6; }
+        .footer-links { margin-top: 20px; display: flex; gap: 20px; }
+        .footer-links a { color: #666; text-decoration: none; font-weight: 700; transition: 0.3s; cursor: pointer; font-size: 0.75rem; }
+        .footer-links a:hover { color: var(--accent); }
+
+        @media (max-width: 768px) {
+            footer { padding: 60px 20px; }
+            .footer-content { flex-direction: column; text-align: center; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="neon-line"></div>
+
+<aside class="ruler ruler-left" id="rulerLeft"></aside>
+<aside class="ruler ruler-right" id="rulerRight"></aside>
+
+<header>
+    <div class="logo" onclick="showView('home')">CS2<span>DEP</span></div>
+    <nav class="nav-links">
+        <a href="#" onclick="showView('home')">Главная</a>
+        <a href="#" onclick="showView('eco')">Экономика</a>
+        <a href="#" onclick="showView('time')">Тайминги</a>
+        <a href="#" onclick="showView('terms')">Соглашение</a>
+    </nav>
+</header>
+
+<div class="container">
+    
+    <div id="home" class="view active">
+        <div class="disclaimer">
+            <p>Экспериментальный проект</p>
+            <span>Данный ресурс находится в стадии разработки. Некоторые данные могут обновляться в режиме реального времени.</span>
+        </div>
+        
+        <section class="hero">
+            <h1>Твой аим — это только половина дела</h1>
+            <p>
+                Профессиональный агрегатор тактических данных для Counter-Strike 2. 
+                Системный подход к анализу игровых механик, расчету экономики и 
+                оптимизации временных маршрутов.
+            </p>
+        </section>
+
+        <div class="grid">
+            <div class="card col-4">
+                <span class="card-label">Economic Module</span>
+                <h2>Баланс сил</h2>
+                <p style="color: #666; font-size: 0.85rem; margin-top: 10px;">Анализ потерь, бонусов и стоимости закупа для менеджмента ресурсов команды.</p>
+                <button class="action-btn" onclick="showView('eco')">Справочник</button>
+            </div>
+
+            <div class="card col-4">
+                <span class="card-label">Timing Module</span>
+                <h2>Физика времени</h2>
+                <p style="color: #666; font-size: 0.85rem; margin-top: 10px;">Замеры скорости передвижения, времени действия гранат и циклов C4.</p>
+                <button class="action-btn" onclick="showView('time')">Замеры</button>
+            </div>
+
+            <div class="card col-4">
+                <span class="card-label">Tactical Module</span>
+                <h2>Картография</h2>
+                <p style="color: #666; font-size: 0.85rem; margin-top: 10px;">Интерактивная база данных раскидок для соревновательного маппула.</p>
+                <button class="action-btn" onclick="showView('home')">В разработке</button>
+            </div>
+
+            <div class="card col-12">
+                <span class="card-label">Tactical Sectors</span>
+                <h2>Актуальный маппул (Active Duty)</h2>
+                <div class="maps-grid" id="mapsGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="eco" class="view">
+        <button class="action-btn" onclick="showView('home')" style="margin-bottom: 40px;">← Назад</button>
+        <span class="card-label">Economic Protocols</span>
+        <h1 style="font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 30px;">Экономическая модель CS2</h1>
+        
+        <div class="grid">
+            <div class="card col-12">
+                <h3>Бонусы за поражение (Loss Bonus)</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr><th>Серия поражений</th><th>Награда</th><th>Статус</th></tr>
+                        <tr><td>0 раундов</td><td class="accent-td">$1400</td><td>Старт / Сброс</td></tr>
+                        <tr><td>1 раунд</td><td class="accent-td">$1900</td><td>Накопление</td></tr>
+                        <tr><td>2 раунда</td><td class="accent-td">$2400</td><td>Слабый бай</td></tr>
+                        <tr><td>3 раунда</td><td class="accent-td">$2900</td><td>Полный бай</td></tr>
+                        <tr><td>4+ раунда</td><td class="accent-td">$3400</td><td>Максимум</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card col-6">
+                <h3>Награды за Kill</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr><td>Нож</td><td class="accent-td">$1500</td></tr>
+                        <tr><td>Дробовики</td><td class="accent-td">$900</td></tr>
+                        <tr><td>ПП (SMGs)</td><td class="accent-td">$600</td></tr>
+                        <tr><td>Винтовки</td><td class="accent-td">$300</td></tr>
+                        <tr><td>AWP</td><td class="accent-td">$100</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card col-6">
+                <h3>Цели раунда</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr><td>Победа (Любая)</td><td class="accent-td">$3250 - $3500</td></tr>
+                        <tr><td>Установка C4 (Т)</td><td class="accent-td">$800</td></tr>
+                        <tr><td>Победа по времени (СТ)</td><td class="accent-td">$3250</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="time" class="view">
+        <button class="action-btn" onclick="showView('home')" style="margin-bottom: 40px;">← Назад</button>
+        <span class="card-label">Temporal Metrics</span>
+        <h1 style="font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 30px;">Тайминги и физика</h1>
+
+        <div class="grid">
+            <div class="card col-6">
+                <h3>Бомба (C4)</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr><td>Таймер взрыва</td><td class="accent-td">40.00с</td></tr>
+                        <tr><td>Дефьюз (с китами)</td><td class="accent-td">5.00с</td></tr>
+                        <tr><td>Дефьюз (без китов)</td><td class="accent-td">10.00с</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card col-6">
+                <h3>Гранаты (Utility)</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr><td>Длительность Smoke</td><td class="accent-td">18.00с</td></tr>
+                        <tr><td>Длительность Molotov</td><td class="accent-td">7.03с</td></tr>
+                        <tr><td>Ослепление Flash</td><td class="accent-td">4.50с</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card col-12">
+                <h3>Скорость бега (U/S)</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr><th>Оружие</th><th>Скорость</th><th>Штраф</th></tr>
+                        <tr><td>Нож</td><td class="accent-td">250</td><td>0%</td></tr>
+                        <tr><td>AK-47 / M4</td><td class="accent-td">215</td><td>14%</td></tr>
+                        <tr><td>AWP</td><td class="accent-td">200</td><td>20%</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mapDetailView" class="view">
+        <button class="action-btn" onclick="showView('home')" style="margin-bottom: 40px;">← К списку карт</button>
+        <h1 id="m-title" style="font-size: clamp(3rem, 10vw, 6rem); text-transform: uppercase;">MAP</h1>
+        <div class="grid" style="margin-top: 30px;">
+            <div class="card col-12">
+                <span class="card-label">Utility Sets</span>
+                <div class="table-wrapper">
+                    <table id="utilTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="terms" class="view">
+        <button class="action-btn" onclick="showView('home')" style="margin-bottom: 40px;">← Назад</button>
+        <span class="card-label">Legal</span>
+        <h1>Пользовательское соглашение</h1>
+        <div class="card col-12 legal-content">
+            <p>Версия: 21.02.2026</p>
+            <h2>1. Общие условия</h2>
+            <p>CS2DEP — независимый проект. Мы предоставляем данные для ознакомления.</p>
+            <h2>2. Авторские права</h2>
+            <p>Counter-Strike 2 является собственностью <b>Valve Corporation</b>. Мы не связаны с Valve официально.</p>
+            <h2>3. Ответственность</h2>
+            <p>Данные могут меняться в зависимости от патчей игры. Создатель: <b>Ivan Grozny</b>.</p>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-info">
+            <span class="logo">CS2<span>DEP</span></span>
+            <p style="margin-top: 15px;">
+                © 2026 CS2DEP. Все права на CS2 принадлежат Valve Corporation. <br>
+                Проект создан в образовательных и тактических целях.
+            </p>
+            <p style="margin-top: 15px; color: var(--accent);">DEVELOPED BY: <b>Ivan Grozny</b></p>
+        </div>
+        <div class="footer-links">
+            <a onclick="showView('terms')">Условия</a>
+            <a href="https://www.valvesoftware.com/en/legal/terms-of-use" target="_blank">Valve Legal</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const mapList = ["Mirage", "Dust II", "Inferno", "Nuke", "Overpass", "Ancient", "Anubis", "Vertigo"];
+    const utilDB = {
+        "Mirage": { utils: [["T-Spawn", "A-Stairs", "Smoke"], ["T-Spawn", "Jungle", "Smoke"], ["T-Spawn", "Ticket", "Smoke"]] },
+        "Dust II": { utils: [["T-Spawn", "Xbox", "Smoke"], ["Doors", "Corner", "Smoke"], ["A-Long", "Cross", "Smoke"]] },
+        "Inferno": { utils: [["Banana", "CT-Start", "Smoke"], ["Banana", "Coffins", "Smoke"], ["Alt-Mid", "Long", "Smoke"]] },
+        "Nuke": { utils: [["T-Red", "Outside 1", "Smoke"], ["T-Red", "Outside 2", "Smoke"]] },
+        "Overpass": { utils: [["T-Spawn", "A-Long", "Smoke"], ["Tracks", "B-Heaven", "Smoke"]] },
+        "Ancient": { utils: [["T-Spawn", "Red-Room", "Smoke"], ["T-Spawn", "A-Temple", "Smoke"]] },
+        "Anubis": { utils: [["T-Spawn", "A-Camera", "Smoke"], ["Mid", "B-Conn", "Smoke"]] },
+        "Vertigo": { utils: [["T-Spawn", "A-Ramp", "Smoke"], ["Mid", "B-Conn", "Smoke"]] }
+    };
+
+    function createRulers() {
+        const left = document.getElementById('rulerLeft');
+        const right = document.getElementById('rulerRight');
+        if(!left) return;
+        let html = "";
+        for(let i = 0; i <= 25; i++) {
+            const isLong = i % 5 === 0;
+            const val = (i * 100).toString().padStart(4, '0');
+            html += `<div class="scale-mark ${isLong ? 'long' : ''}" data-val="${isLong ? val : ''}"></div>`;
+        }
+        left.innerHTML = html;
+        right.innerHTML = html;
+    }
+
+    function renderMaps() {
+        const grid = document.getElementById('mapsGrid');
+        grid.innerHTML = mapList.map(m => `<div class="map-item" onclick="openMap('${m}')">${m}</div>`).join('');
+    }
+
+    function openMap(name) {
+        document.getElementById('m-title').innerText = name;
+        const data = utilDB[name];
+        const table = document.getElementById('utilTable');
+        table.innerHTML = `<tr><th>Позиция</th><th>Цель</th><th>Тип</th></tr>` + 
+            data.utils.map(i => `<tr><td>${i[0]}</td><td>${i[1]}</td><td class="accent-td">${i[2]}</td></tr>`).join('');
+        showView('mapDetailView');
+    }
+
+    function showView(viewId) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = () => {
+        createRulers();
+        renderMaps();
+    };
+</script>
+
+</body>
+</html>
